@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Email Spam Detector - Demo</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Roboto, "Segoe UI", Arial; margin: 24px; }
+    .card { max-width: 900px; margin: auto; padding: 18px; border-radius: 8px; box-shadow: 0 4px 18px rgba(0,0,0,0.06); }
+    textarea { width:100%; min-height: 180px; font-family: monospace; font-size: 14px; padding: 12px; border-radius: 6px; border: 1px solid #ddd; }
+    .btn { padding: 10px 14px; border-radius: 6px; border: none; cursor: pointer; background: #2563eb; color: white; }
+    .result { margin-top: 12px; padding: 12px; border-radius: 6px; }
+    .spam { background: #ffebee; border: 1px solid #f44336; color: #b71c1c; }
+    .susp { background: #fff8e1; border: 1px solid #ffb300; color: #6a4b00; }
+    .ham { background: #e8f5e9; border: 1px solid #2e7d32; color: #145214; }
+    .muted { color: #555; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Email Spam Detector (Demo)</h2>
+    <p class="muted">Paste the email subject + body below and press <strong>Score</strong>. Model threshold: spam &ge; 0.7, suspicious 0.5–0.7.</p>
+    <form method="post">
+      <textarea name="email_text" placeholder="Paste email subject + body here...">{{ text }}</textarea>
+      <div style="margin-top:12px;">
+        <button class="btn" type="submit">Score</button>
+      </div>
+    </form>
+
+    {% if prob is not none %}
+    <div class="result {% if label=='SPAM' %}spam{% elif label=='SUSPICIOUS' %}susp{% else %}ham{% endif %}">
+      <strong>Prediction:</strong> {{ label }} — <strong>{{ '%.2f'% (prob*100) }}%</strong> spam probability
+    </div>
+    {% endif %}
+    <hr>
+    <p class="muted"><strong>Notes:</strong> This demo loads a scikit-learn pipeline saved at <code>models/spam_pipe.joblib</code>. Train the model using <code>python train.py --data path/to/your.csv</code>.</p>
+  </div>
+</body>
+</html>
